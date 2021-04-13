@@ -2,20 +2,16 @@ import React from "react";
 import * as BooksAPI from "./BooksAPI";
 import "./App.css";
 import BookShelf from "./BookShelf";
+import Loading from "./loading";
 class BooksApp extends React.Component {
   state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
     showSearchPage: false,
     currentlyReadingShelf: [],
     wantToReadShelf: [],
     readShelf: [],
     noneShelf: [],
     searchResult: [],
+    enableLoading: true,
   };
 
   componentDidMount() {
@@ -49,15 +45,19 @@ class BooksApp extends React.Component {
         wantToReadShelf,
         readShelf,
         noneShelf,
+        enableLoading: false,
       });
     });
   }
 
   onChangeShelf = (book, value) => {
+    this.setState({
+      enableLoading: true,
+    });
     // console.log(book , event);
 
     BooksAPI.update(book, value).then((res) => {
-      console.log(res);
+      // console.log(res);
 
       const currentlyReadingShelf = [];
       res.currentlyReading.map((bookId) => {
@@ -79,7 +79,7 @@ class BooksApp extends React.Component {
       res.read.map((bookId) => {
         return BooksAPI.get(bookId).then((response) => {
           readShelf.push(response);
-          this.setState({ readShelf });
+          this.setState({ readShelf, enableLoading: false });
         });
       });
 
@@ -101,75 +101,84 @@ class BooksApp extends React.Component {
   };
 
   onSearch = (event) => {
+    this.setState({
+      enableLoading: true,
+    });
     let searchResult = [...this.state.searchResult];
     BooksAPI.search(event.target.value).then((res) => {
       searchResult = res;
-      console.log('ttttttt',searchResult);
-      this.setState({ searchResult });
+      this.setState({ searchResult , enableLoading: false });
     });
   };
 
   render() {
     return (
-      <div className="app">
-        {this.state.showSearchPage ? (
-          <div className="search-books">
-            <div className="search-books-bar">
-              <button
-                className="close-search"
-                onClick={() => this.setState({ showSearchPage: false })}>
-                Close
-              </button>
-              <div className="search-books-input-wrapper">
-                <input
-                  type="text"
-                  placeholder="Search by title or author"
-                  onChange={this.onSearch}
-                />
-              </div>
-            </div>
-            <div className="search-books-results">
-              {this.state.searchResult && (
-                <BookShelf
-                  onChange={this.onChangeShelf}
-                  title={"search result"}
-                  booksArray={this.state.searchResult}
-                />
-              )}
-            </div>
-          </div>
+      <React.Fragment>
+        {this.state.enableLoading ? (
+          <Loading />
         ) : (
-          <div className="list-books">
-            <div className="list-books-title">
-              <h1>MyReads</h1>
-            </div>
-            <div className="list-books-content">
-              <div>
-                <BookShelf
-                  onChange={this.onChangeShelf}
-                  title={"Currently Reading"}
-                  booksArray={this.state.currentlyReadingShelf}
-                />
-                <BookShelf
-                  onChange={this.onChangeShelf}
-                  title={"Want to Read"}
-                  booksArray={this.state.wantToReadShelf}
-                />
-                <BookShelf
-                  onChange={this.onChangeShelf}
-                  title={"Read"}
-                  booksArray={this.state.readShelf}
-                />
+          <div className="app">
+            {this.state.showSearchPage ? (
+              <div className="search-books">
+                <div className="search-books-bar">
+                  <button
+                    className="close-search"
+                    onClick={() => this.setState({ showSearchPage: false })}>
+                    Close
+                  </button>
+                  <div className="search-books-input-wrapper">
+                    <input
+                      type="text"
+                      placeholder="Search by title or author"
+                      onChange={this.onSearch}
+                    />
+                  </div>
+                </div>
+                <div className="search-books-results">
+                  {this.state.searchResult && (
+                    <BookShelf
+                      onChange={this.onChangeShelf}
+                      title={"search result"}
+                      booksArray={this.state.searchResult}
+                    />
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="open-search">
-              <button onClick={() => this.setState({ showSearchPage: true })}>
-                Add a book
-              </button>
-            </div>
+            ) : (
+              <div className="list-books">
+                <div className="list-books-title">
+                  <h1>MyReads</h1>
+                </div>
+                <div className="list-books-content">
+                  <div>
+                    <BookShelf
+                      onChange={this.onChangeShelf}
+                      title={"Currently Reading"}
+                      booksArray={this.state.currentlyReadingShelf}
+                    />
+                    <BookShelf
+                      onChange={this.onChangeShelf}
+                      title={"Want to Read"}
+                      booksArray={this.state.wantToReadShelf}
+                    />
+                    <BookShelf
+                      onChange={this.onChangeShelf}
+                      title={"Read"}
+                      booksArray={this.state.readShelf}
+                    />
+                  </div>
+                </div>
+                <div className="open-search">
+                  <button
+                    onClick={() => this.setState({ showSearchPage: true })}>
+                    Add a book
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
-      </div>
+      </React.Fragment>
     );
   }
 }

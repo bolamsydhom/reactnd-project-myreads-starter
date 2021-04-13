@@ -10,7 +10,7 @@ class BookShelf extends Component {
     };
   }
   componentDidMount() {
-      console.log(this.props.booksArray);
+    //   console.log(this.props.booksArray);
     const selectElements = [
       { name: "Currently Reading", value: "currentlyReading" },
       { name: "Want to Read", value: "wantToRead" },
