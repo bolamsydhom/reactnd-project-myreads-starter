@@ -7,7 +7,7 @@ export default class Book extends Component {
   
 
   render() {
-    const { book, selectElements } = this.props;
+    const { book } = this.props;
     return (
       <li>
         <div className="book">
@@ -22,14 +22,13 @@ export default class Book extends Component {
             />
             <div className="book-shelf-changer">
               <Select
-                selectElements={selectElements}
                 shelf={book.shelf}
                 onChange={this.props.onChange}
               />
             </div>
           </div>
           <div className="book-title">{book.title}</div>
-          {book.authors && book.authors.map(author =>  <div className="book-authors">{author}</div>)}
+          {book.authors && book.authors.map((author, index) =>  <div key={index} className="book-authors">{author}</div>)}
          
         </div>
       </li>

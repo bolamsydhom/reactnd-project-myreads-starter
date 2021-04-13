@@ -3,23 +3,6 @@ import Book from './Book'
 
 
 class BookShelf extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectElements: [],
-    };
-  }
-  componentDidMount() {
-    //   console.log(this.props.booksArray);
-    const selectElements = [
-      { name: "Currently Reading", value: "currentlyReading" },
-      { name: "Want to Read", value: "wantToRead" },
-      { name: "Read", value: "read" },
-      { name: "None", value: "none" }
-    ];
-
-    this.setState({selectElements})
-  }
   render() {
     const { title , booksArray} = this.props;
     return (
@@ -29,7 +12,7 @@ class BookShelf extends Component {
           <ol className="books-grid">
           
                 {
-                    booksArray.map(book => <Book onChange={(e)=>this.props.onChange(book, e.target.value)} key={book.id} book={book} selectElements={this.state.selectElements} shelf={book.shelf}/>)
+                    booksArray.map(book => <Book onChange={(e)=>this.props.onChange(book, e.target.value)} key={book.id} book={book} />)
                 }
                 
        
