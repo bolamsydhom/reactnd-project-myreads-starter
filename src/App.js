@@ -3,6 +3,7 @@ import * as BooksAPI from "./BooksAPI";
 import "./App.css";
 import BookShelf from "./BookShelf";
 import Loading from "./loading";
+import { Link, Route } from "react-router-dom";
 class BooksApp extends React.Component {
   state = {
     showSearchPage: false,
@@ -107,7 +108,7 @@ class BooksApp extends React.Component {
     let searchResult = [...this.state.searchResult];
     BooksAPI.search(event.target.value).then((res) => {
       searchResult = res;
-      this.setState({ searchResult , enableLoading: false });
+      this.setState({ searchResult, enableLoading: false });
     });
   };
 
@@ -118,64 +119,72 @@ class BooksApp extends React.Component {
           <Loading />
         ) : (
           <div className="app">
-            {this.state.showSearchPage ? (
-              <div className="search-books">
-                <div className="search-books-bar">
-                  <button
-                    className="close-search"
-                    onClick={() => this.setState({ showSearchPage: false })}>
-                    Close
-                  </button>
-                  <div className="search-books-input-wrapper">
-                    <input
-                      type="text"
-                      placeholder="Search by title or author"
-                      onChange={this.onSearch}
-                    />
+            <Route
+              exact
+              path="/search"
+              render={() => (
+                <div className="search-books">
+                  <div className="search-books-bar">
+                    <Link
+                      className="close-search"
+                      to="/">
+                      Close
+                    </Link>
+                    <div className="search-books-input-wrapper">
+                      <input
+                        type="text"
+                        placeholder="Search by title or author"
+                        onChange={this.onSearch}
+                      />
+                    </div>
+                  </div>
+                  <div className="search-books-results">
+                    {this.state.searchResult && (
+                      <BookShelf
+                        onChange={this.onChangeShelf}
+                        title={"search result"}
+                        booksArray={this.state.searchResult}
+                      />
+                    )}
                   </div>
                 </div>
-                <div className="search-books-results">
-                  {this.state.searchResult && (
-                    <BookShelf
-                      onChange={this.onChangeShelf}
-                      title={"search result"}
-                      booksArray={this.state.searchResult}
-                    />
-                  )}
-                </div>
-              </div>
-            ) : (
-              <div className="list-books">
-                <div className="list-books-title">
-                  <h1>MyReads</h1>
-                </div>
-                <div className="list-books-content">
-                  <div>
-                    <BookShelf
-                      onChange={this.onChangeShelf}
-                      title={"Currently Reading"}
-                      booksArray={this.state.currentlyReadingShelf}
-                    />
-                    <BookShelf
-                      onChange={this.onChangeShelf}
-                      title={"Want to Read"}
-                      booksArray={this.state.wantToReadShelf}
-                    />
-                    <BookShelf
-                      onChange={this.onChangeShelf}
-                      title={"Read"}
-                      booksArray={this.state.readShelf}
-                    />
+              )}
+            />
+            
+            <Route
+              exact
+              path="/"
+              render={() => (
+                <div className="list-books">
+                  <div className="list-books-title">
+                    <h1>MyReads</h1>
+                  </div>
+                  <div className="list-books-content">
+                    <div>
+                      <BookShelf
+                        onChange={this.onChangeShelf}
+                        title={"Currently Reading"}
+                        booksArray={this.state.currentlyReadingShelf}
+                      />
+                      <BookShelf
+                        onChange={this.onChangeShelf}
+                        title={"Want to Read"}
+                        booksArray={this.state.wantToReadShelf}
+                      />
+                      <BookShelf
+                        onChange={this.onChangeShelf}
+                        title={"Read"}
+                        booksArray={this.state.readShelf}
+                      />
+                    </div>
+                  </div>
+                  <div className="open-search">
+                    <Link to="/search">Add a book</Link>
                   </div>
                 </div>
-                <div className="open-search">
-                  <button
-                    onClick={() => this.setState({ showSearchPage: true })}>
-                    Add a book
-                  </button>
-                </div>
-              </div>
-            )}
+              )}
+            />
+            
           </div>
         )}
       </React.Fragment>
