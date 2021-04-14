@@ -4,15 +4,19 @@ import "./App.css";
 import BookShelf from "./BookShelf";
 import Loading from "./loading";
 import { Link, Route } from "react-router-dom";
+import debounce from "lodash.debounce";
+
 class BooksApp extends React.Component {
   state = {
     showSearchPage: false,
+    allBooksOnShelf: [],
     currentlyReadingShelf: [],
     wantToReadShelf: [],
     readShelf: [],
     noneShelf: [],
     searchResult: [],
     enableLoading: true,
+    value: "",
   };
 
   componentDidMount() {
@@ -20,7 +24,9 @@ class BooksApp extends React.Component {
     const wantToReadShelf = [];
     const readShelf = [];
     const noneShelf = [];
+    let allBooksOnShelf = [];
     BooksAPI.getAll().then((res) => {
+      allBooksOnShelf = res;
       res.forEach((book) => {
         switch (book.shelf) {
           case "currentlyReading":
@@ -46,6 +52,7 @@ class BooksApp extends React.Component {
         wantToReadShelf,
         readShelf,
         noneShelf,
+        allBooksOnShelf,
         enableLoading: false,
       });
     });
@@ -103,13 +110,37 @@ class BooksApp extends React.Component {
 
   onSearch = (event) => {
     this.setState({
-      enableLoading: true,
+      value: event.target.value,
     });
     let searchResult = [...this.state.searchResult];
-    BooksAPI.search(event.target.value).then((res) => {
-      searchResult = res;
-      this.setState({ searchResult, enableLoading: false });
-    });
+    const searchQuery = event.target.value;
+
+    const debouncedSearch = debounce(
+      () =>
+        BooksAPI.search(searchQuery).then((res) => {
+          const test = [];
+          res &&
+            res.forEach((book) => {
+              this.state.allBooksOnShelf.forEach((b) => {
+                if (b.id === book.id) {
+                  book.shelf = b.shelf;
+                } else {
+                  book.shelf = "none";
+                }
+
+              });
+              test.push(book);
+            }
+            
+            );
+
+          console.log(test);
+          searchResult = test;
+          this.setState({ searchResult, enableLoading: false });
+        }),
+      1000
+    );
+    debouncedSearch();
   };
 
   render() {
@@ -125,15 +156,14 @@ class BooksApp extends React.Component {
               render={() => (
                 <div className="search-books">
                   <div className="search-books-bar">
-                    <Link
-                      className="close-search"
-                      to="/">
+                    <Link className="close-search" to="/">
                       Close
                     </Link>
                     <div className="search-books-input-wrapper">
                       <input
                         type="text"
                         placeholder="Search by title or author"
+                        value={this.state.value}
                         onChange={this.onSearch}
                       />
                     </div>
@@ -150,7 +180,7 @@ class BooksApp extends React.Component {
                 </div>
               )}
             />
-            
+
             <Route
               exact
               path="/"
@@ -184,7 +214,6 @@ class BooksApp extends React.Component {
                 </div>
               )}
             />
-            
           </div>
         )}
       </React.Fragment>

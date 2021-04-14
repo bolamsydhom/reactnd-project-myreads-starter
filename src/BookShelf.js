@@ -1,21 +1,25 @@
 import React, { Component } from "react";
-import Book from './Book'
-
+import Book from "./Book";
 
 class BookShelf extends Component {
+  componentDidMount() {}
   render() {
-    const { title , booksArray} = this.props;
+    const { title, booksArray } = this.props;
     return (
       <div className="bookshelf">
         <h2 className="bookshelf-title">{title}</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
-          
-                {
-                    booksArray.map(book => <Book onChange={(e)=>this.props.onChange(book, e.target.value)} key={book.id} book={book} />)
-                }
-                
-       
+            {!booksArray.error ?
+              booksArray.map((book) => (
+                <Book
+                  onChange={(e) => this.props.onChange(book, e.target.value)}
+                  key={book.id}
+                  book={book}
+                />
+              )):
+              <li>Kindly enter another search keyword</li>
+              }
           </ol>
         </div>
       </div>
