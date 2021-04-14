@@ -134,7 +134,7 @@ class BooksApp extends React.Component {
             
             );
 
-          console.log(test);
+          // console.log(test);
           searchResult = test;
           this.setState({ searchResult, enableLoading: false });
         }),
