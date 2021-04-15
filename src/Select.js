@@ -21,7 +21,7 @@ export default class Select extends Component {
     render() {
         const {shelf}= this.props ; 
         return (
-            <select value={shelf} onChange={this.props.onChange}>
+            <select value={shelf || 'none'} onChange={this.props.onChange}>
             <option value="move" disabled>Move to...</option>
             {this.state.selectElements.map(el =>  <option key={el.value} value={el.value}>{el.name}</option>)}
     

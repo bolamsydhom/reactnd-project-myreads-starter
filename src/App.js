@@ -17,6 +17,7 @@ class BooksApp extends React.Component {
     searchResult: [],
     enableLoading: true,
     value: "",
+
   };
 
   componentDidMount() {
@@ -118,21 +119,20 @@ class BooksApp extends React.Component {
     const debouncedSearch = debounce(
       () =>
         BooksAPI.search(searchQuery).then((res) => {
+          console.log(res);
           const test = [];
-          res &&
-            res.forEach((book) => {
-              this.state.allBooksOnShelf.forEach((b) => {
-                if (b.id === book.id) {
-                  book.shelf = b.shelf;
-                } else {
-                  book.shelf = "none";
-                }
-
+          if (res && !res.error) {
+              res.forEach((book) => {
+                this.state.allBooksOnShelf.forEach((b) => {
+                  if (b.id === book.id) {
+                    book.shelf = b.shelf;
+                  } else {
+                    // book.shelf = "none";
+                  }
+                });
+                test.push(book);
               });
-              test.push(book);
-            }
-            
-            );
+          }
 
           // console.log(test);
           searchResult = test;
