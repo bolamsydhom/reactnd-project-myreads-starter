@@ -3,14 +3,18 @@ a project or udacity course
 
 ## Getting Started
 * Clone this project
-Run ```bash
+Run 
+```bash
 npm install
-``` in the project root directory to install dependencies
+``` 
+in the project root directory to install dependencies
 
-Run ``` bash
+Run 
+``` bash
 npm start
-``` to launch the Project
-```
+``` 
+to launch the Project
+
 ## structure
 you will find the front end part is separated into multiple components
 * [Book.js](/) --> To style and right the logic related to the book entity itself
