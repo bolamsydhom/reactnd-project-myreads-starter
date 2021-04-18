@@ -1,6 +1,14 @@
 # MyReads Project
 a project or udacity course
 
+## Getting Started
+* Clone this project
+* ```bash
+npm i
+```
+* ```bash
+npm start
+```
 ## structure
 you will find the front end part is separated into multiple components
 * [Book.js](/) --> To style and right the logic related to the book entity itself

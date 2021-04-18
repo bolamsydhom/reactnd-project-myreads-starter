@@ -1,10 +1,8 @@
-import React, { Component } from "react";
+import React from "react";
 import Book from "./Book";
 
-class BookShelf extends Component {
-  componentDidMount() {}
-  render() {
-      const { title, booksArray } = this.props;
+function BookShelf(props) {
+      const { title, booksArray } = props;
     //   console.log(booksArray);
     return (
       <div className="bookshelf">
@@ -25,7 +23,7 @@ class BookShelf extends Component {
         </div>
       </div>
     );
-  }
+  
 }
 
 export default BookShelf;
