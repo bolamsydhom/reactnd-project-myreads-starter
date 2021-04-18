@@ -3,10 +3,8 @@ a project or udacity course
 
 ## Getting Started
 * Clone this project
-* ```bash
+```bash
 npm i
-```
-* ```bash
 npm start
 ```
 ## structure
