@@ -3,17 +3,16 @@ a project or udacity course
 
 ## Getting Started
 * Clone this project
-Run 
+* To install dependencies Run
 ```bash
 npm install
 ``` 
-in the project root directory to install dependencies
 
-Run 
+* to launch the Project Run
 ``` bash
 npm start
 ``` 
-to launch the Project
+
 
 ## structure
 you will find the front end part is separated into multiple components
